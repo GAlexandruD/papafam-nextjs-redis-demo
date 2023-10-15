@@ -11,24 +11,30 @@ type User = {
 export const GET = async (req: Request) => {
   const { searchParams } = new URL(req.url); // "https://example.com/?id=test12345"
   const id = searchParams.get("id"); // "id" is the parameter key
-  console.log(id); // This will log "test12345"
+  console.log("Id from url is:", id);
+
+  // If no ID provided, return 400
+  if (!id) {
+    return new Response("Id not provided", {
+      status: 400,
+      // headers: {
+      //   "Content-Type": "application/json",
+      // },
+    });
+  }
 
   const res = await getRedis("testKey");
+  const responseBody = {
+    id,
+    redisValue: res ? res : "Nuttin' here",
+  };
 
-  console.log("blabla", id);
-
-  return new Response(`Hello World! ${res ? res : "Nuttin' here"}`, {
+  return new Response(JSON.stringify(id ? responseBody : "Id not provided"), {
     status: 200,
-    // headers: {
-    //   "content-type": "text/plain",
-    // },
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
-
-  //   let user: User | undefined = JSON.parse(
-  //     (await getRedis(id as string)) || "null"
-  //   );
-
-  //   console.log("user", user);
 
   //   if (!user) {
   //     user = {
