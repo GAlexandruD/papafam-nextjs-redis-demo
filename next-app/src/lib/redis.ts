@@ -1,14 +1,18 @@
 import { Redis } from "ioredis";
 
+// TODO: Host should be in loaded from the env file. For remote developing is 'redis'
 const redis = new Redis({
   port: 6379,
-  host: "redis",
+  host: "127.0.0.1",
 });
 
 export const getRedis = async (key: string) => {
   try {
+    const start = Date.now();
     const data = await redis.get(key);
-    return data ? data : undefined;
+    const end = Date.now();
+    const redisFetchTime = end - start;
+    return { data, redisFetchTime };
   } catch (error) {
     console.error(`Error getting data from Redis: ${error}`);
     return undefined;
@@ -25,15 +29,5 @@ export const setRedis = async (key: string, value: any) => {
     return false;
   }
 };
-
-// export const setRedis = async (key: string, value: any) => {
-//   redis.set(key, "testValue", (err, result) => {
-//     if (err) {
-//       console.error(`Error writing data to Redis:, ${err}`);
-//     } else {
-//       console.log(`Successfully wrote data to Redis:, ${result}`);
-//     }
-//   });
-// };
 
 export default redis;
