@@ -3,7 +3,7 @@ import { Redis } from "ioredis";
 // TODO: Host should be in loaded from the env file. For remote developing is 'redis'
 const redis = new Redis({
   port: 6379,
-  host: "127.0.0.1",
+  host: "redis",
 });
 
 export const getRedis = async (key: string) => {

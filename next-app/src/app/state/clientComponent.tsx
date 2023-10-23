@@ -34,7 +34,9 @@ const ClientComponent = () => {
     data: dataApiRedis,
     error: errorApiRedis,
     isLoading: isLoadingRedis,
-  } = GetDataWithSWR("http://localhost:3000/api/user?id=Testing%20ID");
+  } = GetDataWithSWR(
+    "https://next-app-7fgzqv.bunnyenv.com/api/user?id=Testing%20ID"
+  );
   console.log("dataApiRedis", dataApiRedis);
 
   //
