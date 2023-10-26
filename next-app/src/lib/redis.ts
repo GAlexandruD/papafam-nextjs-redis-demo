@@ -1,10 +1,31 @@
 import { Redis } from "ioredis";
 
-// TODO: Host should be in loaded from the env file. For remote developing is 'redis'
+// When project runs in Bunnyshell, the env variables are loaded from the host environment process.env.VARIABLE_NAME
 const redis = new Redis({
-  port: 6379,
-  host: "redis",
+  port: parseInt(process.env.REDIS_SERVICE_PORT || "6379"),
+  host: process.env.redis || "localhost",
 });
+
+export const scardRedis = async (setName: string) => {
+  try {
+    const counter = await redis.scard(setName);
+    return counter;
+  } catch (error) {
+    console.error(`Error getting counter from Redis: ${error}`);
+    return undefined;
+  }
+};
+
+export const saddRedis = async (setName: string, value: any) => {
+  try {
+    await redis.sadd(setName, value);
+    // redis.quit();
+    return true;
+  } catch (error) {
+    console.error(`Error writing sadd to Redis: ${error}`);
+    return false;
+  }
+};
 
 export const getRedis = async (key: string) => {
   try {
@@ -12,6 +33,7 @@ export const getRedis = async (key: string) => {
     const data = await redis.get(key);
     const end = Date.now();
     const redisFetchTime = end - start;
+    // redis.quit();
     return { data, redisFetchTime };
   } catch (error) {
     console.error(`Error getting data from Redis: ${error}`);
@@ -23,9 +45,10 @@ export const setRedis = async (key: string, value: any) => {
   try {
     const data = JSON.stringify(value);
     await redis.set(key, data);
+    // redis.quit();
     return true;
   } catch (error) {
-    console.error(`Error writing data to Redis: ${error}`);
+    console.error(`Error writing set to Redis: ${error}`);
     return false;
   }
 };

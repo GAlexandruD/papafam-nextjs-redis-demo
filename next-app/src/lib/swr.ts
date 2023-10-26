@@ -1,20 +1,38 @@
-// "use client";
 import redis from "@/lib/redis";
 import { Console } from "console";
 import useSWR, { SWRResponse } from "swr";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
+export const GetCachedRedisDataWithSWR = (
+  link: string = "https://jsonplaceholder.typicode.com/todos/1"
+) => {
+  const { data, error } = useSWR(link, fetcher);
+  console.log(
+    "fetcher_swr.ts",
+    process.env.BNS_INGRESS_URL_NEXT_APP_0 || "No ENV"
+  );
+  console.log("data in swr.ts is: ", data);
+  return { data, error, isLoading: !data && !error };
+};
+
 export const GetDataWithSWR = (
   link: string = "https://jsonplaceholder.typicode.com/todos/1"
 ) => {
   const { data, error } = useSWR(link, fetcher);
-
+  console.log(
+    "fetcher_swr.ts",
+    process.env.BNS_INGRESS_URL_NEXT_APP_0 || "No ENV"
+  );
   console.log("data in swr.ts is: ", data);
   return { data, error, isLoading: !data && !error };
 };
 
 const timedFetcher = async (url: string) => {
+  console.log(
+    "fetcher_swr.ts",
+    process.env.BNS_INGRESS_URL_NEXT_APP_0 || "No ENV"
+  );
   const startTime = Date.now();
   const response = await fetch(url);
   const data = await response.json();
@@ -26,6 +44,10 @@ const timedFetcher = async (url: string) => {
 export const GetTimedDataWithSWR = (
   link: string = "https://jsonplaceholder.typicode.com/todos/1"
 ) => {
+  console.log(
+    "fetcher_swr.ts",
+    process.env.BNS_INGRESS_URL_NEXT_APP_0 || "No ENV"
+  );
   const { data: timedData, error } = useSWR(link, timedFetcher);
   console.log("MMMMMMMMMMMMMMMMMMM: ", { timedData }, error);
   return { timedData, error, isLoading: !timedData && !error };

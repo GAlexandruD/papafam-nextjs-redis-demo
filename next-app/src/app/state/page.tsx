@@ -1,8 +1,5 @@
 import { unstable_serialize } from "swr";
-// import TestRedis from "@/components/TestRedis";
 import ClientComponent from "./clientComponent";
-// import FetchSwr from "@/lib/swr";
-// import { getRedis } from "@/lib/redis";
 
 type Props = { key: string };
 

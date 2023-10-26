@@ -35,7 +35,11 @@ const ClientComponent = () => {
     error: errorApiRedis,
     isLoading: isLoadingRedis,
   } = GetDataWithSWR(
-    "https://next-app-7fgzqv.bunnyenv.com/api/user?id=Testing%20ID"
+    `${
+      process.env.NEXT_PUBLIC_BNS_INGRESS_URL_NEXT_APP_0
+        ? "https://" + process.env.NEXT_PUBLIC_BNS_INGRESS_URL_NEXT_APP_0
+        : "http://localhost:3000/"
+    }api/user?id=Testing%20ID`
   );
   console.log("dataApiRedis", dataApiRedis);
 
@@ -90,17 +94,21 @@ const ClientComponent = () => {
   return (
     <div className="bg-stone-500 dark:bg-stone-700 p-10">
       <p>I am inside ClientComponent</p>
-      <p>
+      <div className="p-4">
         [{fetchTime}] time in ms | SWR value:{" "}
         {swrTimedData ? swrTimedData.title : "Zilch, nada, nothing"}
-      </p>
-      <p>
+        <p className="text-sm">
+          Description: Timed the fetch function inside the SWR{" "}
+        </p>
+      </div>
+      <p className="p-4">
         [{dataApiRedis?.redisValue?.redisFetchTime}] time in ms [
         {fetchRedisTime}] | SWR value from Redis [
         {dataApiRedis?.redisValue?.data}]
       </p>
       <p>
-        SWR Redis value: {dataApiRedis ? dataApiRedis.id : "Nothing fetched"}
+        SWR Redis key to get:{" "}
+        {dataApiRedis ? dataApiRedis.id : "Nothing fetched"}
       </p>
     </div>
   );
